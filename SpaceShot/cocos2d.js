@@ -154,7 +154,7 @@ cc.loadjs('CCDrawingPrimitives.js');//15
 cc.loadjs('platform/CCApplication.js');//16
 cc.loadjs('platform/CCSAXParser.js');//16
 cc.loadjs('../box2d/box2d.js');//16
-cc.loadjs('../SimpleTutorial/Classes/AppDelegate.js');//17
+cc.loadjs('../SpaceShot/Classes/AppDelegate.js');//17
 cc.loadjs('platform/AppControl.js');//18
 if (menuType == "DOM") {
     cc.loadjs('base_nodes/CCdomNode.js');
@@ -164,7 +164,7 @@ if (menuType == "DOM") {
 } else {
     cc.loadjs('menu_nodes/CCMenuItem.js');
     cc.loadjs('menu_nodes/CCMenu.js');
-    cc.loadjs('../SimpleTutorial/testbasic.js');
+    cc.loadjs('../SpaceShot/testbasic.js');
 }
 cc.loadjs('tileMap_parallax_nodes/CCTMXTiledMap.js');
 cc.loadjs('tileMap_parallax_nodes/CCTMXXMLParser.js');
@@ -172,6 +172,6 @@ cc.loadjs('tileMap_parallax_nodes/CCTMXObjectGroup.js');
 cc.loadjs('tileMap_parallax_nodes/CCTMXLayer.js');
 cc.loadjs('tileMap_parallax_nodes/CCParallaxNode.js');
 cc.loadjs('../CocosDenshion/SimpleAudioEngine.js');
-cc.loadjs('../SimpleTutorial/Resource.js');
-cc.loadjs('../SimpleTutorial/Classes/AppGame.js');
-cc.loadjs('../SimpleTutorial/Classes/CCParallaxNode-Extras.js');
+cc.loadjs('../SpaceShot/Resource.js');
+cc.loadjs('../SpaceShot/Classes/AppGame.js');
+cc.loadjs('../SpaceShot/Classes/CCParallaxNode-Extras.js');
