@@ -112,7 +112,8 @@ var Bullet = cc.Sprite.extend({
         this.initWithFile(s_bullet);
     },
     inBounds:function () {
-        return this.x >= 0 && this.x <= 400 && this.y >= 0 && this.y <= 550;
+        var I = this.getPosition();
+        return I.x >= 0 && I.x <= cc.canvas.width && I.y >= 0 && I.y <= cc.canvas.height;
     },
     update:function () {
         var newX = this.getPositionX(), newY = this.getPositionY();
@@ -148,22 +149,35 @@ var spaceGame = cc.Layer.extend({
         if (keys[cc.key.j]) {
             var b = new Bullet();
             var p = this._ship.getPosition();
-            this.addChild(b);
+            this.addChild(b,0,2);
             b.setPosition(cc.ccp(p.x, p.y+ this._ship.getContentSize().height/2));
         }
 
         if (Math.random() < 0.1) {
             var em = new Ememy();
-            this.addChild(em);
+            this.addChild(em,0,1);
         }
 
         for (var i = 0; i < this._m_pChildren.length; i++) {
             var pChild = this._m_pChildren[i];
             pChild.update();
-            if (pChild instanceof Ememy && !pChild.active) {
+            if(!pChild.active && (pChild.getTag() ==1 || pChild.getTag() == 2)){
                 this.removeChild(pChild);
             }
+            if(pChild.getTag() == 1){
+                for (var j = 0; j < this._m_pChildren.length; j++) {
+                    var jChild  = this._m_pChildren[i];
+                    if(jChild.getTag() == 2){
+                        if (collides(pChild,jChild)){
+                            this.removeChild(pChild);
+                            this.removeChild(jChild);
+                        }
+                    }
+                }
+            }
         }
+
+
     }
 });
 
@@ -180,4 +194,10 @@ spaceGame.scene = function () {
     var layer = this.node();
     scene.addChild(layer)
     return scene;
+}
+
+function collides(aa,bb){
+    var a = new cc.RectMake(aa.getPosition().x,aa.getPosition().y,aa.getContentSize().width,aa.getContentSize().height);
+    var b = new cc.RectMake(bb.getPosition().x,bb.getPosition().y,bb.getContentSize().width,bb.getContentSize().height);
+    return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 }
