@@ -878,6 +878,9 @@ cc.Sprite = cc.Node.extend({
                 //direct draw image by canvas drawImage
                 if (this._m_pobTexture instanceof HTMLImageElement) {
                     if ((this._m_tContentSize.width == 0) && (this._m_tContentSize.height == 0)) {
+                        this.setContentSize(new cc.Size(this._m_pobTexture.width, this._m_pobTexture.height));
+                        this._m_obRect.size.width = this._m_pobTexture.width;
+                        this._m_obRect.size.height = this._m_pobTexture.height;
                         context.drawImage(this._m_pobTexture, pos.x, -(pos.y + this._m_pobTexture.height));
                     } else {
                         context.drawImage(this._m_pobTexture,
@@ -888,6 +891,9 @@ cc.Sprite = cc.Node.extend({
                     }
                 } else {
                     if ((this._m_tContentSize.width == 0) && (this._m_tContentSize.height == 0)) {
+                        this.setContentSize(new cc.Size(this._m_pobTexture.width, this._m_pobTexture.height));
+                        this._m_obRect.size.width = this._m_pobTexture.width;
+                        this._m_obRect.size.height = this._m_pobTexture.height;
                         context.drawImage(this._m_pobTexture, pos.x, -(pos.y + this._m_pobTexture.height));
                     } else {
                         context.drawImage(this._m_pobTexture,
@@ -1207,7 +1213,7 @@ cc.Sprite = cc.Node.extend({
 
         this.updateColor();
     },
-    getColor:function () {
+     getColor:function () {
         if (this._m_bOpacityModifyRGB) {
             return new cc.Color3B(this._m_sColorUnmodified);
         }
