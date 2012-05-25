@@ -162,4 +162,9 @@ cc.loadjs('tileMap_parallax_nodes/CCTMXLayer.js');
 cc.loadjs('tileMap_parallax_nodes/CCParallaxNode.js');
 cc.loadjs('../CocosDenshion/SimpleAudioEngine.js');
 cc.loadjs('../Em/Resource.js');
-cc.loadjs('../Em/Classes/AppGame.js');
+/*cc.loadjs('../Em/Classes/AppGame.js');*/
+cc.loadjs('../Em/Classes/GameControlMenu.js');
+cc.loadjs('../Em/Classes/GameLayer.js');
+cc.loadjs('../Em/Classes/SettingsLayer.js');
+cc.loadjs('../Em/Classes/AboutLayer.js');
+cc.loadjs('../Em/Classes/SysMenu.js');
