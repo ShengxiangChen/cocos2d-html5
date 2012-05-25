@@ -171,7 +171,9 @@ cc.LabelTTF = cc.Sprite.extend({
             }
             else {
                 line = testLine;
+                if(n == words.length-1){
                 context.fillText(line, x + offset, y );
+                }
             }
 
         }
