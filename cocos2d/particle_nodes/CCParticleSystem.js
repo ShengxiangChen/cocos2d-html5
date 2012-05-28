@@ -740,7 +740,6 @@ cc.ParticleSystem = cc.Node.extend({
                 this.modeB.rotatePerSecondVar = parseFloat(this._valueForKey("rotatePerSecondVariance", dictionary));
             } else {
                 cc.Assert(false, "Invalid emitterType in config file");
-                cc.BREAK_IF(true);
             }
 
             // life span
