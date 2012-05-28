@@ -4,12 +4,17 @@ var global = {
         Ship:1,
         Enemy:2
     },
+    weaponType:{
+         one:1
+    },
     Tag:{
-        Bullet:900,
-        Enemy:901
+        EnemyBullet:900,
+        Enemy:901,
+        Ship:902,
+        ShipBullet:903
     },
     moveType:{
-        Random:0,
+        Attack:0,
         Vertical:1,
         Horizontal:2,
         Overlap:3

@@ -2,43 +2,49 @@ var EnemyType = [
     {
         type:0,
         textureName:"E0.png",
-        HP:1,
+        bulletType:"W2.png",
+        HP:2,
         moveType:global.moveType.Vertical,
         scoreValue:10
     },
     {
         type:1,
         textureName:"E1.png",
-        HP:2,
-        moveType:global.moveType.Horizontal,
+        bulletType:"W2.png",
+        HP:4,
+        moveType:global.moveType.Attack,
         scoreValue:20
     },
     {
         type:2,
         textureName:"E2.png",
-        HP:5,
-        moveType:global.moveType.Horizontal,
+        bulletType:"W2.png",
+        HP:8,
+        moveType:global.moveType.Vertical,
         scoreValue:50
     },
     {
         type:3,
         textureName:"E3.png",
-        HP:10,
+        bulletType:"W2.png",
+        HP:12,
         moveType:global.moveType.Overlap,
         scoreValue:100
     },
     {
         type:4,
         textureName:"E4.png",
-        HP:15,
-        moveType:global.moveType.Random,
+        bulletType:"W2.png",
+        HP:17,
+        moveType:global.moveType.Horizontal,
         scoreValue:150
     },
     {
         type:5,
         textureName:"E5.png",
-        HP:20,
-        moveType:global.moveType.Random,
+        bulletType:"W2.png",
+        HP:27,
+        moveType:global.moveType.Horizontal,
         scoreValue:200
     }
 ]

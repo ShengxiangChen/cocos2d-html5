@@ -1,24 +1,29 @@
 var Level1 = {
-    Enemy:[
+    enemies:[
         {
-            Type:0,
-            S:cc.ccp(320 * Math.random(),500),
+            ShowType:"Repeate",
+            ShowTime:"00:02",
+            Types:[1,3,2,3]
         },
         {
-            Type:1,
-            S:cc.ccp(320 * Math.random(),500),
+            ShowType:"Once",
+            ShowTime:"00:04",
+            Types:[0,2,3,1,3,2]
         },
         {
-            Type:2,
-            S:cc.ccp(320 * Math.random(),500),
+            ShowType:"Once",
+            ShowTime:"00:8",
+            Types:[0,2,2,2,2]
         },
         {
-            Type:0,
-            S:cc.ccp(320 * Math.random(),500),
+            ShowType:"Once",
+            ShowTime:"00:10",
+            Types:[0,0,0,0,0,3]
         },
         {
-            Type:3,
-            S:cc.ccp(320 * Math.random(),500),
+            ShowType:"Once",
+            ShowTime:"01:55",
+            Types:[0,3,2,1,0,3]
         }
     ]
 };

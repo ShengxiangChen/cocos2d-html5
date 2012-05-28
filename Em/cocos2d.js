@@ -166,6 +166,7 @@ cc.loadjs('../Em/Classes/Config/Global.js');
 cc.loadjs('../Em/Classes/Config/Level.js');
 cc.loadjs('../Em/Classes/Config/EnemyType.js');
 cc.loadjs('../Em/Classes/GameControlMenu.js');
+cc.loadjs('../Em/Classes/LevelManager.js');
 cc.loadjs('../Em/Classes/GameLayer.js');
 cc.loadjs('../Em/Classes/SettingsLayer.js');
 cc.loadjs('../Em/Classes/AboutLayer.js');
