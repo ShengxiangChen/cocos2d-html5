@@ -1,6 +1,39 @@
-var _shipTemp = cc.Sprite.extend({
-
+var additiveSprite = cc.Sprite.extend({
+    draw:function(ctx){
+        var context = ctx || cc.renderContext;
+        context.globalCompositeOperation = 'lighter';
+        this._super(ctx);
+    }
 });
+var flareEffect = function(parent, target, callback){
+    var flare = new additiveSprite();
+    flare.initWithFile(s_flare);
+    parent.addChild(flare,10);
+    flare.setOpacity(0);
+    flare.setPosition(cc.ccp(-30,297));
+    flare.setRotation(-120);
+    flare.setScale(0.2);
+
+    var opacityAnim = cc.FadeTo.actionWithDuration(0.5,255);
+    var opacDim = cc.FadeTo.actionWithDuration(1, 0);
+    var biggeAnim = cc.ScaleBy.actionWithDuration(0.7,1.2,1.2);
+    var biggerEase = cc.EaseSineOut.actionWithAction(biggeAnim);
+    var moveAnim = cc.MoveBy.actionWithDuration(0.5,cc.ccp(328,0));
+    var easeMove = cc.EaseSineOut.actionWithAction(moveAnim);
+    var rotateAnim = cc.RotateBy.actionWithDuration(2.5,90);
+    var rotateEase = cc.EaseExponentialOut.actionWithAction(rotateAnim)
+    var bigger = cc.ScaleTo.actionWithDuration(0.5,1);
+
+    var onComplete = cc.CallFunc.actionWithTarget(target,callback);
+    var killflare = cc.CallFunc.actionWithTarget(flare, function(){
+        this.getParent().removeChild(this);
+    });
+    flare.runAction(cc.Sequence.actions(opacityAnim,biggerEase, opacDim, killflare, onComplete));
+    flare.runAction(easeMove);
+    flare.runAction(rotateEase);
+    flare.runAction(bigger);
+};
+
 
 var SysMenu = cc.Layer.extend({
     _ship:null,
@@ -33,7 +66,9 @@ var SysMenu = cc.Layer.extend({
             var aboutDisabled = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(252, 33 * 2, 126, 33));
 
             // 逐一创建3个菜单项
-            var newGame = cc.MenuItemSprite.itemFromNormalSprite(newGameNormal, newGameSelected, newGameDisabled, this, this.onNewGame);
+            var newGame = cc.MenuItemSprite.itemFromNormalSprite(newGameNormal, newGameSelected, newGameDisabled, this, function(){
+                flareEffect(this,this,this.onNewGame);
+            });
             var gameSettings = cc.MenuItemSprite.itemFromNormalSprite(gameSettingsNormal, gameSettingsSelected, gameSettingsDisabled, this, this.onSettings);
             var about = cc.MenuItemSprite.itemFromNormalSprite(aboutNormal, aboutSelected, aboutDisabled, this, this.onAbout);
 
@@ -63,19 +98,19 @@ var SysMenu = cc.Layer.extend({
         scene.addChild(GameLayer.node());
         scene.addChild(GameControlMenu.node());
         // 从右至左滚动画面切换到游戏场景。
-        cc.Director.sharedDirector().replaceScene(scene);
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     onSettings:function (pSender) {
         var scene = cc.Scene.node();
         scene.addChild(SettingsLayer.node());
         // 缩放变换切换到游戏设置画面。
-        cc.Director.sharedDirector().replaceScene(scene);
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     onAbout:function (pSender) {
         var scene = cc.Scene.node();
         scene.addChild(AboutLayer.node());
         // 缩放变换切换到游戏设置画面。
-        cc.Director.sharedDirector().replaceScene(scene);
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     update:function(){
         if(this._ship.getPosition().y > 480){

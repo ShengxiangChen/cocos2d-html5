@@ -34,7 +34,7 @@ var AboutLayer = cc.Layer.extend({
     backCallback:function (pSender) {
         var scene = cc.Scene.node();
         scene.addChild(SysMenu.node());
-        cc.Director.sharedDirector().replaceScene(scene);
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     }
 });
 
