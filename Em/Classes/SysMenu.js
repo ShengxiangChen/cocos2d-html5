@@ -42,10 +42,8 @@ var SysMenu = cc.Layer.extend({
         var bRet = false;
         if (this._super) {
             this._s = cc.Director.sharedDirector().getWinSize();
-            // 用一个图片做画面的背景
             var sp = cc.Sprite.spriteWithFile(s_loading);
             sp.setAnchorPoint(cc.PointZero());
-            // 既然是背景，zOrder值尽量小。
             this.addChild(sp, 0, 1);
 
             var logo = cc.Sprite.spriteWithFile(s_logo);
@@ -65,18 +63,14 @@ var SysMenu = cc.Layer.extend({
             var aboutSelected = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(252, 33, 126, 33));
             var aboutDisabled = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(252, 33 * 2, 126, 33));
 
-            // 逐一创建3个菜单项
             var newGame = cc.MenuItemSprite.itemFromNormalSprite(newGameNormal, newGameSelected, newGameDisabled, this, function(){
                 flareEffect(this,this,this.onNewGame);
             });
             var gameSettings = cc.MenuItemSprite.itemFromNormalSprite(gameSettingsNormal, gameSettingsSelected, gameSettingsDisabled, this, this.onSettings);
             var about = cc.MenuItemSprite.itemFromNormalSprite(aboutNormal, aboutSelected, aboutDisabled, this, this.onAbout);
 
-            // 将这些菜单项都加入到菜单对象中
             var menu = cc.Menu.menuWithItems(newGame, gameSettings, about);
-            // 设置菜单以纵向布局显示
             menu.alignItemsVerticallyWithPadding(10);
-            // 最重要的是不要忘记把菜单加入主层对象，否则不会显示
             this.addChild(menu, 1, 2);
             menu.setPosition(cc.ccp(this._s.width / 2, this._s.height / 2 - 80));
             this.schedule(this.update,0.1)
@@ -94,22 +88,18 @@ var SysMenu = cc.Layer.extend({
     },
     onNewGame:function (pSender) {
         var scene = cc.Scene.node();
-        // 特别说明，我们将游戏层和控制层在此分开，由scene作为他们统一的父节点。
         scene.addChild(GameLayer.node());
         scene.addChild(GameControlMenu.node());
-        // 从右至左滚动画面切换到游戏场景。
         cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     onSettings:function (pSender) {
         var scene = cc.Scene.node();
         scene.addChild(SettingsLayer.node());
-        // 缩放变换切换到游戏设置画面。
         cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     onAbout:function (pSender) {
         var scene = cc.Scene.node();
         scene.addChild(AboutLayer.node());
-        // 缩放变换切换到游戏设置画面。
         cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     },
     update:function(){

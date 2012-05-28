@@ -1,22 +1,4 @@
 var keys = [];
-var global = {
-    level:1,
-    bulletType:{
-        Ship:1,
-        Enemy:2
-    },
-    Tag:{
-        Bullet:900,
-        Enemy:901
-    },
-    moveType:{
-        Random:0,
-        Vertical:1,
-        Horizontal:2,
-        Overlap:3
-    }
-};
-
 var winSize = null;
 
 var Ship = cc.Sprite.extend({
@@ -145,48 +127,6 @@ var Enemy = cc.Sprite.extend({
     }
 });
 
-var E1 = Enemy.extend({
-    textureName:"E01.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
-var E2 = Enemy.extend({
-    textureName:"E02.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
-var E3 = Enemy.extend({
-    textureName:"E03.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
-var E4 = Enemy.extend({
-    textureName:"E04.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
-var E5 = Enemy.extend({
-    textureName:"E05.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
-var E6 = Enemy.extend({
-    textureName:"E06.png",
-    ctor:function () {
-        this._super();
-    }
-});
-
 var GameLayer = cc.Layer.extend({
     time:null,
     _ship:null,
@@ -229,32 +169,7 @@ var GameLayer = cc.Layer.extend({
             this.addChild(lbLife, 100, 6);
             lbLife.setPosition(cc.ccp(50, 450));
 
-
-            /*//Enemy
-             var e1 = new E1();
-             e1.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e1, 11);
-
-             var e2 = new E2();
-             e2.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e2, 12);
-
-             var e3 = new E3();
-             e3.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e3, 13);
-
-             var e4 = new E4();
-             e4.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e4, 14);
-
-             var e5 = new E5();
-             e5.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e5, 15);
-
-             var e6 = new E6();
-             e6.setPosition(cc.ccp(winSize.width / 2, winSize.height / 2));
-             this.addChild(e6, 16);*/
-
+            //create enemy
             for (var i in Level1.Enemy) {
                 var tmpSet = Level1.Enemy[i];
                 var tmpEmy = new Enemy(EnemyType[tmpSet.Type]);
@@ -317,8 +232,7 @@ var GameLayer = cc.Layer.extend({
 
         var touch = pTouches[0];
         var location = touch.locationInView(touch.view());
-        // 让飞船在1秒钟内移动过去
-        this._ship.runAction(cc.MoveTo.actionWithDuration(1.0, cc.ccp(location.x, location.y)));
+        //this._ship.runAction(cc.MoveTo.actionWithDuration(1.0, cc.ccp(location.x, location.y)));
     },
     keyDown:function (e) {
         keys[e] = true;
