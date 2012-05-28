@@ -5,6 +5,48 @@ var additiveSprite = cc.Sprite.extend({
         this._super(ctx);
     }
 });
+function explode(ccpoint,parent, scale, duration)
+{
+    scale = scale || 0.3;
+    duration = duration || 0.5;
+    var sprite1 = "Resources/explode1.jpg";
+    var sprite2 = "Resources/explode2.jpg";
+    var sprite3 = "Resources/explode3.jpg";
+    var one = new additiveSprite();
+    one.initWithFile(sprite1);
+    var two = new additiveSprite();
+    two.initWithFile(sprite2);
+    var three = new additiveSprite();
+    three.initWithFile(sprite3);
+    one.setPosition(ccpoint);
+    two.setPosition(ccpoint);
+    three.setPosition(ccpoint);
+    parent.addChild(one);
+    parent.addChild(two);
+    parent.addChild(three);
+    one.setScale(scale);
+    two.setScale(scale);
+    three.setScale(three);
+    three.setRotation(Math.random()*360);
+    var left = cc.RotateBy.actionWithDuration(duration, -45);
+    var right = cc.RotateBy.actionWithDuration(duration, 45);
+    var scaleBy = cc.ScaleBy.actionWithDuration(duration, 4,4);
+    var fadeOut = cc.FadeOut.actionWithDuration(duration);
+    one.runAction(left);
+    two.runAction(right);
+    one.runAction(scaleBy);
+    two.runAction(scaleBy.copy());
+    three.runAction(scaleBy.copy());
+    one.runAction(fadeOut);
+    two.runAction(fadeOut.copy());
+    three.runAction(fadeOut.copy());
+    setTimeout(function(){
+        parent.removeChild(one);
+        parent.removeChild(two);
+        parent.removeChild(three);
+    }, duration*1000);
+}
+
 var flareEffect = function(parent, target, callback){
     var flare = new additiveSprite();
     flare.initWithFile(s_flare);
