@@ -5,6 +5,7 @@ var EnemyType = [
         bulletType:"W2.png",
         HP:2,
         moveType:global.moveType.Vertical,
+        attackMode:global.AttackMode.Normal,
         scoreValue:10
     },
     {
@@ -13,38 +14,43 @@ var EnemyType = [
         bulletType:"W2.png",
         HP:4,
         moveType:global.moveType.Attack,
+        attackMode:global.AttackMode.Normal,
         scoreValue:20
     },
     {
         type:2,
         textureName:"E2.png",
         bulletType:"W2.png",
-        HP:8,
-        moveType:global.moveType.Vertical,
+        HP:6,
+        moveType:global.moveType.Horizontal,
+        attackMode:global.AttackMode.Tsuihikidan,
         scoreValue:50
     },
     {
         type:3,
         textureName:"E3.png",
         bulletType:"W2.png",
-        HP:12,
+        HP:8,
         moveType:global.moveType.Overlap,
+        attackMode:global.AttackMode.Normal,
         scoreValue:100
     },
     {
         type:4,
         textureName:"E4.png",
         bulletType:"W2.png",
-        HP:17,
+        HP:15,
         moveType:global.moveType.Horizontal,
+        attackMode:global.AttackMode.Tsuihikidan,
         scoreValue:150
     },
     {
         type:5,
         textureName:"E5.png",
         bulletType:"W2.png",
-        HP:27,
+        HP:20,
         moveType:global.moveType.Horizontal,
+        attackMode:global.AttackMode.Normal,
         scoreValue:200
     }
 ]

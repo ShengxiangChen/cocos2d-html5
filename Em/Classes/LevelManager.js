@@ -52,7 +52,7 @@ var LevelManager = cc.Class.extend({
 
     addEnemyToGameLayer:function(enemyType){
         var addEnemy = new Enemy(EnemyType[enemyType]);
-        var pos = new cc.Point(80 + (winSize.width - 160) * Math.random(), winSize.height);
+        addEnemy.setPosition(cc.ccp(80 + (winSize.width - 160) * Math.random(), winSize.height));
 
         var offset, tmpAction;
         switch (addEnemy.moveType) {
@@ -79,11 +79,12 @@ var LevelManager = cc.Class.extend({
                 break;
             case global.moveType.Overlap:
                 var newX = (addEnemy.getPosition().x <= winSize.width / 2) ? 320 : -320;
-                tmpAction = cc.MoveBy.actionWithDuration(4, cc.ccp(newX, -320));
+                var a0 = cc.MoveBy.actionWithDuration(4, cc.ccp(newX, -240));
+                var a1 = cc.MoveBy.actionWithDuration(4,cc.ccp(-newX,-320));
+                tmpAction = cc.Sequence.actions(a0,a1);
                 break;
         }
 
-        addEnemy.setPosition(cc.ccp(80 + (winSize.width - 160) * Math.random(), winSize.height));
         this._gameLayer.addChild(addEnemy, addEnemy.zOrder, global.Tag.Enemy);
         addEnemy.runAction(tmpAction);
     }

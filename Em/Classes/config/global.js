@@ -18,5 +18,9 @@ var global = {
         Vertical:1,
         Horizontal:2,
         Overlap:3
+    },
+    AttackMode:{
+        Normal:1,
+        Tsuihikidan:2
     }
 };
