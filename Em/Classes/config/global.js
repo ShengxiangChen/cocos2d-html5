@@ -1,5 +1,7 @@
 var global = {
     level:1,
+    life:4,
+    score:0,
     bulletType:{
         Ship:1,
         Enemy:2

@@ -4,10 +4,7 @@ var winSize = null;
 var Ship = cc.Sprite.extend({
     speed:220,
     bulletSpeed:700,
-    score:0,
-    HP:3,
-    life:3,
-    flashTime:150,
+    HP:10,
     bulletTypeValue:1,
     bulletPowerValue:1,
     shotting:false,
@@ -19,7 +16,7 @@ var Ship = cc.Sprite.extend({
     maxBulletPowerValue:4,
     canShot:true,
     lifeUpScores:[50000, 100000, 150000, 200000, 250000, 300000],
-    appearPosition:cc.ccp(160, 30),
+    appearPosition:cc.ccp(160, 0),
     _hurtColorLife:0,
     active:true,
     ctor:function () {
@@ -28,7 +25,7 @@ var Ship = cc.Sprite.extend({
         var shipTexture = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
         this.initWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
         this.setTag(this.zOrder);
-
+        this.setPosition(this.appearPosition);
         // set frame
         var animation = cc.Animation.animation();
         animation.addFrameWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
@@ -36,13 +33,18 @@ var Ship = cc.Sprite.extend({
 
         // ship animate
         var action = cc.Animate.actionWithDuration(0.4, animation, true);
-        this.runAction(cc.RepeatForever.actionWithAction(action));
 
-        this.schedule(this.shoot, 1 / 8);
+        var onBorn = cc.CallFunc.actionWithTarget(this,function(pSender){
+            pSender.runAction(cc.RepeatForever.actionWithAction(action));
+        });
+        this.runAction(cc.Sequence.actions(
+            cc.MoveBy.actionWithDuration(0.5,cc.ccp(0, 60)),onBorn
+        ));
+        this.schedule(this.shoot, 1 / 10);
     },
     update:function (dt) {
         var newX = this.getPosition().x, newY = this.getPosition().y;
-        if (keys[cc.key.w] && this.getPosition().y <= winSize.height) {
+        if (keys[cc.key.w]  && this.getPosition().y <= winSize.height) {
             newY += dt * this.speed;
         }
         if (keys[cc.key.s] && this.getPosition().y >= 0) {
@@ -58,7 +60,6 @@ var Ship = cc.Sprite.extend({
 
         if (this.HP <= 0) {
             this.active = false;
-            console.log(this.active)
         }
         this._timeTick += dt;
         if (this._timeTick > 0.1) {
@@ -79,6 +80,8 @@ var Ship = cc.Sprite.extend({
         }
     },
     destroy:function () {
+        global.life--;
+        this.getParent().addChild(new Explosion(this.getPosition().x, this.getPosition().y));
         this.getParent().removeChild(this);
     },
     throwBomb:function () {
@@ -195,8 +198,7 @@ var Enemy = cc.Sprite.extend({
     scoreValue:200,
     canBeAttack:true,
     zOrder:1000,
-    delayTime:0.7 + 1.5 * Math.random(),
-    canBeOverlapedToAttackPlane:true,
+    delayTime:1.5 + 1.5 * Math.random(),
     attackMode:global.AttackMode.Normal,
     ctor:function (arg) {
         this.HP = arg.HP;
@@ -205,7 +207,6 @@ var Enemy = cc.Sprite.extend({
         this.attackMode = arg.attackMode;
         cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
         this.initWithSpriteFrameName(arg.textureName);
-        this.setScale(0.5);
         this.schedule(this.shoot, this.delayTime)
     },
     _timeTick:0,
@@ -225,6 +226,7 @@ var Enemy = cc.Sprite.extend({
         }
     },
     destroy:function () {
+        global.score += this.scoreValue;
         this.getParent().addChild(new Explosion(this.getPosition().x, this.getPosition().y));
         this.getParent().removeChild(this);
     },
@@ -251,6 +253,7 @@ var GameLayer = cc.Layer.extend({
     _backTileMapHeight:0,
     _backTileMapRe:null,
     _levelManager:null,
+    _tmpScore:0,
     lbScore:null,
     screenRect:null,
     init:function () {
@@ -262,30 +265,26 @@ var GameLayer = cc.Layer.extend({
             this.screenRect = new cc.Rect(0, 0, winSize.width, winSize.height);
 
             // score
-            this.lbScore = cc.LabelTTF.labelWithString("Time: 00:00", cc.SizeMake(winSize.width / 2, 50), cc.TextAlignmentRight, "Marker Felt", 16);
-            this.addChild(this.lbScore, 1, 3);
-            this.lbScore.setPosition(cc.ccp(winSize.width - 100, winSize.height - 45));
-
-            this.schedule(this.timeCounter, 1);
+            this.lbScore = cc.LabelTTF.labelWithString("Score: 0", cc.SizeMake(winSize.width / 2, 50), cc.TextAlignmentRight, "Arial", 14);
+            this.addChild(this.lbScore, 1000);
+            this.lbScore.setPosition(cc.ccp(winSize.width - 100, winSize.height - 15));
 
             // ship life
             var shipTexture = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
             var life = cc.Sprite.spriteWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
             life.setScale(0.5);
-            life.setAnchorPoint(cc.ccp(0, 1));
-            life.setPosition(cc.ccp(10, 460));
+            life.setPosition(cc.ccp(30, 460));
             this.addChild(life, 1, 5);
 
             // ship Life count
-            var lbLife = cc.LabelTTF.labelWithString("3", "Arial", 20);
-            lbLife.setAnchorPoint(cc.ccp(0, 1));
-            this.addChild(lbLife, 100, 6);
-            lbLife.setPosition(cc.ccp(50, 450));
+            this._lbLife = cc.LabelTTF.labelWithString("0", "Arial", 20);
+            this._lbLife.setPosition(cc.ccp(60, 463));
+            this._lbLife.setColor(cc.RED());
+            this.addChild(this._lbLife,1000);
 
             // ship
             this._ship = new Ship();
-            this._ship.setPosition(this._ship.appearPosition);
-            this.addChild(this._ship);
+            this.addChild(this._ship,this._ship.zOrder,global.Tag.Ship);
 
             // accept touch now!
             this.setIsTouchEnabled(true);
@@ -296,6 +295,8 @@ var GameLayer = cc.Layer.extend({
             // schedule
             this.schedule(this.update);
             this.schedule(this.checkEnemyIsInBound, 5);
+            this.schedule(this.timeCounter, 1);
+
             bRet = true;
         }
         return bRet;
@@ -308,8 +309,14 @@ var GameLayer = cc.Layer.extend({
         minute = minute > 9 ? minute : "0" + minute;
         second = second > 9 ? second : "0" + second;
         var curTime = minute + ":" + second;
-        this.lbScore.setString("Time: " + curTime);
         this._levelManager.loadLevelResource(this._time);
+    },
+    updateUI:function(dt){
+        if(this._tmpScore < global.score){
+            this._tmpScore += 5;
+        }
+        this._lbLife.setString(global.life);
+        this.lbScore.setString("Score: " + this._tmpScore);
     },
     initBackground:function () {
         // bg
@@ -404,25 +411,33 @@ var GameLayer = cc.Layer.extend({
         keys[e] = false;
     },
     update:function (dt) {
-        var pChild, bulletChild, emyChild;
+        var pChild, pxChild, bulletChild;
         //check collide
         for (var i in this.getChildren()) {
-            bulletChild = this.getChildren()[i];
-            if (bulletChild.getTag() == global.Tag.ShipBullet) {
+            pxChild = this.getChildren()[i];
+            if (pxChild.getTag() == global.Tag.Enemy) {
                 for (var j in this.getChildren()) {
-                    emyChild = this.getChildren()[j];
-                    if (emyChild.getTag() == global.Tag.Enemy) {
-                        if (this.collide(bulletChild, emyChild)) {
-                            emyChild.hurt();
+                    bulletChild = this.getChildren()[j];
+                    if (bulletChild.getTag() == global.Tag.ShipBullet) {
+                        if (this.collide(pxChild, bulletChild)) {
                             bulletChild.hurt();
+                            pxChild.hurt();
                         }
                     }
                 }
+                if(this.collide(pxChild, this._ship)){
+                    if(this._ship.active){
+                        pxChild.hurt();
+                        this._ship.hurt();
+                    }
+                }
             }
-            else if (bulletChild.getTag() == global.Tag.EnemyBullet){
-                if (this.collide(bulletChild, this._ship)) {
-                    bulletChild.hurt();
+            else if (pxChild.getTag() == global.Tag.EnemyBullet){
+                if (this.collide(pxChild, this._ship)) {
+                    if(this._ship.active){
+                    pxChild.hurt();
                     this._ship.hurt();
+                    }
                 }
             }
         }
@@ -442,7 +457,19 @@ var GameLayer = cc.Layer.extend({
             }
         }
 
+        if(global.life > 0 && !this._ship.active){
+            // ship
+            this._ship = new Ship();
+            this.addChild(this._ship,this._ship.zOrder,global.Tag.Ship);
+        }
+        else if(global.life <= 0 && !this._ship.active){
+            this.runAction(cc.Sequence.actions(
+                cc.DelayTime.actionWithDuration(3),
+                cc.CallFunc.actionWithTarget(this,this.onGameOver)))
+        }
 
+
+        this.updateUI();
     },
     shoot:function (dt) {
         //enemy shoot
@@ -459,8 +486,12 @@ var GameLayer = cc.Layer.extend({
             a.getPosition().x - a.getContentSize().width * a.getAnchorPoint().x + a.getContentSize().width > b.getPosition().x - b.getContentSize().width * b.getAnchorPoint().x &&
             a.getPosition().y - a.getContentSize().height * a.getAnchorPoint().y < b.getPosition().y + b.getContentSize().height &&
             a.getPosition().y - a.getContentSize().height * a.getAnchorPoint().y + a.getContentSize().height > b.getPosition().y - b.getContentSize().height * b.getAnchorPoint().y;
+    },
+    onGameOver:function () {
+        var scene = cc.Scene.node();
+        scene.addChild(GameOver.node());
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2,scene));
     }
-
 });
 
 GameLayer.node = function () {

@@ -2,13 +2,14 @@ var GameControlMenu = cc.Layer.extend({
     init:function () {
         var bRet = false;
         if (this._super()) {
-            cc.MenuItemFont.setFontSize(22);
+            cc.MenuItemFont.setFontSize(18);
+            cc.MenuItemFont.setFontName("Arial");
             var s = cc.Director.sharedDirector().getWinSize();
             var systemMenu = cc.MenuItemFont.itemFromString("Main Menu", this, this.sysMenu);
             var menu = cc.Menu.menuWithItems(systemMenu, null);
             menu.setPosition(cc.ccp(0, 0));
             systemMenu.setAnchorPoint(cc.ccp(0, 0));
-            systemMenu.setPosition(cc.ccp(s.width-110, 10));
+            systemMenu.setPosition(cc.ccp(s.width-95, 5));
             this.addChild(menu, 1, 2);
             bRet = true;
         }

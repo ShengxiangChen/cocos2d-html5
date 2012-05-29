@@ -6,7 +6,7 @@ var EnemyType = [
         HP:2,
         moveType:global.moveType.Vertical,
         attackMode:global.AttackMode.Normal,
-        scoreValue:10
+        scoreValue:20
     },
     {
         type:1,
@@ -15,7 +15,7 @@ var EnemyType = [
         HP:4,
         moveType:global.moveType.Attack,
         attackMode:global.AttackMode.Normal,
-        scoreValue:20
+        scoreValue:40
     },
     {
         type:2,
@@ -24,7 +24,7 @@ var EnemyType = [
         HP:6,
         moveType:global.moveType.Horizontal,
         attackMode:global.AttackMode.Tsuihikidan,
-        scoreValue:50
+        scoreValue:60
     },
     {
         type:3,
@@ -33,7 +33,7 @@ var EnemyType = [
         HP:8,
         moveType:global.moveType.Overlap,
         attackMode:global.AttackMode.Normal,
-        scoreValue:100
+        scoreValue:80
     },
     {
         type:4,
