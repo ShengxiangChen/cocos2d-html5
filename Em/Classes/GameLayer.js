@@ -23,13 +23,13 @@ var Ship = cc.Sprite.extend({
         //init life
         this.life = global.level + 4;
         var shipTexture = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
-        this.initWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
+        this.initWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
         this.setTag(this.zOrder);
         this.setPosition(this.appearPosition);
         // set frame
         var animation = cc.Animation.animation();
-        animation.addFrameWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
-        animation.addFrameWithTexture(shipTexture, cc.RectMake(90, 0, 90, 56));
+        animation.addFrameWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
+        animation.addFrameWithTexture(shipTexture, cc.RectMake(60, 0, 60, 38));
 
         // ship animate
         var action = cc.Animate.actionWithDuration(0.4, animation, true);
@@ -40,7 +40,7 @@ var Ship = cc.Sprite.extend({
         this.runAction(cc.Sequence.actions(
             cc.MoveBy.actionWithDuration(0.5,cc.ccp(0, 60)),onBorn
         ));
-        this.schedule(this.shoot, 1 / 10);
+        this.schedule(this.shoot, 1 / 6);
     },
     update:function (dt) {
         var newX = this.getPosition().x, newY = this.getPosition().y;
@@ -74,9 +74,10 @@ var Ship = cc.Sprite.extend({
     },
     shoot:function (dt) {
         if (this.canShot) {
-            var b = new Bullet(this.bulletSpeed, "W1.png", global.AttackMode.Normal);
+/*            var b = new Bullet(this.bulletSpeed, "W1.png", global.AttackMode.Normal);
             this.getParent().addChild(b, b.zOrder, global.Tag.ShipBullet);
-            b.setPosition(cc.ccp(this.getPosition().x, this.getPosition().y + this.getContentSize().height * 0.3));
+            b.setPosition(cc.ccp(this.getPosition().x, this.getPosition().y + this.getContentSize().height * 0.3));*/
+            playerShoot(this.getParent(),this);
         }
     },
     destroy:function () {
@@ -206,7 +207,9 @@ var Enemy = cc.Sprite.extend({
         this.scoreValue = arg.scoreValue;
         this.attackMode = arg.attackMode;
         cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
+
         this.initWithSpriteFrameName(arg.textureName);
+        console.log(this)
         this.schedule(this.shoot, this.delayTime)
     },
     _timeTick:0,
@@ -228,6 +231,7 @@ var Enemy = cc.Sprite.extend({
     destroy:function () {
         global.score += this.scoreValue;
         this.getParent().addChild(new Explosion(this.getPosition().x, this.getPosition().y));
+        explode(this.getPosition(),this.getParent(), 1.2, 0.7);
         this.getParent().removeChild(this);
     },
     shoot:function () {
@@ -271,8 +275,8 @@ var GameLayer = cc.Layer.extend({
 
             // ship life
             var shipTexture = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
-            var life = cc.Sprite.spriteWithTexture(shipTexture, cc.RectMake(0, 0, 90, 56));
-            life.setScale(0.5);
+            var life = cc.Sprite.spriteWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
+            life.setScale(0.6);
             life.setPosition(cc.ccp(30, 460));
             this.addChild(life, 1, 5);
 

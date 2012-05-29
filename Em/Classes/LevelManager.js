@@ -19,13 +19,15 @@ var LevelManager = cc.Class.extend({
     _minuteToSecond:function(minuteStr){
         if(!minuteStr)
             return 0;
-
-        var mins = minuteStr.split(':');
-        if(mins.length == 1){
-            return parseInt(mins[0]);
-        }else {
-            return parseInt(mins[0] )* 60 + parseInt(mins[1]);
+        if(typeof(minuteStr) !=  "number"){
+            var mins = minuteStr.split(':');
+            if(mins.length == 1){
+                return parseInt(mins[0]);
+            }else {
+                return parseInt(mins[0] )* 60 + parseInt(mins[1]);
+            }
         }
+        return minuteStr;
     },
 
     loadLevelResource:function(deltaTime){

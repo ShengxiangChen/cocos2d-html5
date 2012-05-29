@@ -5,6 +5,49 @@ var additiveSprite = cc.Sprite.extend({
         this._super(ctx);
     }
 });
+
+function playerShoot(target,that)
+{
+    var dur = 0.075;
+    var offset = 13;
+    cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_bullet_plist);
+    var effect = new additiveSprite();
+    effect.initWithSpriteFrameName("W1.png");
+    target.addChild(effect, 999999);
+    effect.setPosition(cc.ccp(that.getPosition().x+offset, that.getPosition().y+3 + that.getContentSize().height * 0.3));
+    effect.setScaleY(0.3);
+    effect.setScaleX(2);
+
+    var effect2 = new additiveSprite();
+    effect2.initWithSpriteFrameName("W1.png");
+    target.addChild(effect2, 999999);
+    effect2.setPosition(cc.ccp(that.getPosition().x-offset, that.getPosition().y+3 + that.getContentSize().height * 0.3));
+    effect2.setScaleY(0.3);
+    effect2.setScaleX(2);
+
+    var chargeUp = cc.ScaleTo.actionWithDuration(dur,1,1);
+    var brighter = cc.FadeOut.actionWithDuration(dur);
+
+    effect.runAction(chargeUp);
+    effect.runAction(brighter);
+
+    effect2.runAction(chargeUp.copy());
+    effect2.runAction(brighter.copy());
+    setTimeout(function(){
+        effect.getParent().removeChild(effect);
+        effect2.getParent().removeChild(effect2);
+        var b = new Bullet(that.bulletSpeed, "W1.png", global.AttackMode.Normal);
+        target.addChild(b, b.zOrder, global.Tag.ShipBullet);
+        b.setPosition(cc.ccp(that.getPosition().x+offset, that.getPosition().y+3 + that.getContentSize().height * 0.3));
+
+        var bb = new Bullet(that.bulletSpeed, "W1.png", global.AttackMode.Normal);
+        target.addChild(bb, bb.zOrder, global.Tag.ShipBullet);
+        bb.setPosition(cc.ccp(that.getPosition().x-offset, that.getPosition().y+3 + that.getContentSize().height * 0.3));
+
+    },dur*1000);
+}
+
+
 function explode(ccpoint,parent, scale, duration)
 {
     scale = scale || 0.3;
@@ -26,7 +69,7 @@ function explode(ccpoint,parent, scale, duration)
     parent.addChild(three);
     one.setScale(scale);
     two.setScale(scale);
-    three.setScale(three);
+    three.setScale(scale);
     three.setRotation(Math.random()*360);
     var left = cc.RotateBy.actionWithDuration(duration, -45);
     var right = cc.RotateBy.actionWithDuration(duration, 45);

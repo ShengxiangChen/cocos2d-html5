@@ -3,8 +3,8 @@ var Level1 = {
         {
             ShowType:"Repeate",
             ShowTime:"00:02",
-            Types:[1,3,2,3]
-        },
+            Types:[2,2,2,2]
+        }/*,
         {
             ShowType:"Once",
             ShowTime:"00:04",
@@ -24,6 +24,6 @@ var Level1 = {
             ShowType:"Once",
             ShowTime:"01:55",
             Types:[0,3,2,1,0,3]
-        }
+        }*/
     ]
 };

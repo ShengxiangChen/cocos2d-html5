@@ -64,7 +64,7 @@ cc.AppDelegate = cc.Application.extend({
 
         // create a scene. it's an autorelease object
         //var pScene = SysMenu.scene();
-        var pScene = GameOver.scene();
+        var pScene = GameLayer.scene();
 
         // run
         pDirector.runWithScene(pScene);

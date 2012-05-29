@@ -171,3 +171,4 @@ cc.loadjs('../Em/Classes/GameLayer.js');
 cc.loadjs('../Em/Classes/SettingsLayer.js');
 cc.loadjs('../Em/Classes/AboutLayer.js');
 cc.loadjs('../Em/Classes/SysMenu.js');
+cc.loadjs('../Em/Classes/GameOver.js');
