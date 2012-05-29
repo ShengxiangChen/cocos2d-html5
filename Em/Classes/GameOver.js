@@ -14,9 +14,9 @@ var GameOver = cc.Layer.extend({
             logo.setPosition(cc.ccp(0,300));
             this.addChild(logo,10,1);
 
-            var playAgainNormal = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(387, 0, 126, 33));
-            var playAgainSelected = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(387, 33, 126, 33));
-            var playAgainDisabled = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(387, 33 * 2, 126, 33));
+            var playAgainNormal = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(0, 0, 126, 33));
+            var playAgainSelected = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(0, 33, 126, 33));
+            var playAgainDisabled = cc.Sprite.spriteWithFile(s_menu, cc.RectMake(0, 33 * 2, 126, 33));
 
             var playAgain = cc.MenuItemSprite.itemFromNormalSprite(playAgainNormal, playAgainSelected, playAgainDisabled, this, function(){
                 flareEffect(this,this,this.onNewGame);
