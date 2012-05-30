@@ -16,7 +16,7 @@ var Ship = cc.Sprite.extend({
     maxBulletPowerValue:4,
     canShot:true,
     lifeUpScores:[50000, 100000, 150000, 200000, 250000, 300000],
-    appearPosition:cc.ccp(160, 0),
+    appearPosition:cc.ccp(160, 60),
     _hurtColorLife:0,
     active:true,
     ctor:function () {
