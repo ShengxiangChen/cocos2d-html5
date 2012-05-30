@@ -66,7 +66,7 @@ cc.loadjs = function (filename) {
         else {
             cc.setup("gameCanvas");
             //init audio
-            cc.AudioManager.sharedEngine().init("mp3,ogg");
+            cc.AudioManager.sharedEngine().init("mp3");
             //we are ready to run the game
             cc.Loader.shareLoader().onloading = function () {
                 cc.LoaderScene.shareLoaderScene().draw();

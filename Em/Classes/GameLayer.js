@@ -37,10 +37,25 @@ var Ship = cc.Sprite.extend({
         var onBorn = cc.CallFunc.actionWithTarget(this,function(pSender){
             pSender.runAction(cc.RepeatForever.actionWithAction(action));
         });
-        this.runAction(cc.Sequence.actions(
-            cc.MoveBy.actionWithDuration(0.5,cc.ccp(0, 60)),onBorn
-        ));
+        this.runAction(onBorn);
         this.schedule(this.shoot, 1 / 6);
+
+
+        //revive effect
+        this.HP=999999999;
+        var ghostSprite = new additiveSprite();
+        ghostSprite.initWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
+        ghostSprite.setScale(8);
+        ghostSprite.setPosition({x:this.getContentSize().x/2, y:this.getContentSize().y/2});
+        this.addChild(ghostSprite, 3000, 99999999);
+        ghostSprite.runAction(cc.ScaleTo.actionWithDuration(0.5,1,1));
+        var blinks = cc.Blink.actionWithDuration(3, 9);
+        var makeHP10 = cc.CallFunc.actionWithTarget(this,function(t){t.HP = 10; t.setIsVisible(true)});
+        this.runAction(cc.Sequence.actions(cc.DelayTime.actionWithDuration(0.5), blinks, makeHP10));
+
+        if (global.sound) {
+            cc.AudioManager.sharedEngine().playBackgroundMusic(s_bgMusic, true);
+        }
     },
     update:function (dt) {
         var newX = this.getPosition().x, newY = this.getPosition().y;
@@ -209,7 +224,6 @@ var Enemy = cc.Sprite.extend({
         cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
 
         this.initWithSpriteFrameName(arg.textureName);
-        console.log(this)
         this.schedule(this.shoot, this.delayTime)
     },
     _timeTick:0,

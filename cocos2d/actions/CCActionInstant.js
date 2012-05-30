@@ -39,7 +39,6 @@ cc.ActionInstant = cc.FiniteTimeAction.extend({
         return true;
     },
     step:function (dt) {
-        cc.UNUSED_PARAM(dt);
         this.update(1);
     },
     update:function (time) {
