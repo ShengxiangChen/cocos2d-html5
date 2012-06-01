@@ -170,7 +170,10 @@ cc.generateTintImage = function (img, rgbks, color, rect) {
     var ctx = buff.getContext("2d");
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'copy';
-    ctx.drawImage(rgbks[3], rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, 0, 0, rect.size.width, rect.size.height);
+    try{
+        ctx.drawImage(rgbks[3], rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, 0, 0, rect.size.width, rect.size.height);
+    }catch(e){}
+
 
     ctx.globalCompositeOperation = 'lighter';
     if (selColor.r > 0) {
@@ -269,7 +272,7 @@ cc.Sprite = cc.Node.extend({
     // texture
     _m_obRect:new cc.Rect(),
     _m_obRectInPixels:cc.RectZero(),
-    _m_bRectRotated:null,
+    _m_bRectRotated:false,
 
     // Offset Position (used by Zwoptex)
     _m_obOffsetPositionInPixels:cc.PointZero(), // absolute
@@ -289,6 +292,7 @@ cc.Sprite = cc.Node.extend({
     _m_nOpacity:255,
 
     ctor:function (fileName) {
+        this._m_bRectRotated = false;
         this._super();
         if (fileName) {
             if (typeof(fileName) == "string") {
@@ -528,6 +532,7 @@ cc.Sprite = cc.Node.extend({
     initWithSpriteFrame:function (pSpriteFrame) {
         cc.Assert(pSpriteFrame != null, "");
         var bRet = this.initWithTexture(pSpriteFrame.getTexture(), pSpriteFrame.getRect());
+
         this.setDisplayFrame(pSpriteFrame);
 
         return bRet;
@@ -602,7 +607,7 @@ cc.Sprite = cc.Node.extend({
     /** updates the texture rect, rectRotated and untrimmed size of the CCSprite in pixels
      */
     setTextureRectInPixels:function (rect, rotated, size) {
-        this._m_obRectInPixels = rect;
+        this._m_obRectInPixels = new cc.Rect(rect.origin.x,rect.origin.y,rect.size.width,rect.size.height);
         this._m_obRect = cc.RECT_PIXELS_TO_POINTS(rect);
         this._m_bRectRotated = rotated;
 
@@ -716,7 +721,14 @@ cc.Sprite = cc.Node.extend({
                 this._m_sQuad.tr.texCoords.u = right;
                 this._m_sQuad.tr.texCoords.v = top;
             }
-        }
+        }else{
+
+        }/*            if (this._m_bRectRotated) {
+         cc.Log("swap :" + rect.size.width + "   " + rect.size.height);
+         this._m_obRect.size.width = rect.size.height;
+         this._m_obRect.size.height = rect.size.width;
+         this.setRotation(90);
+         }*/
     },
     // BatchNode methods
     /** updates the quad according the the rotation, position, scale values. */
@@ -883,11 +895,19 @@ cc.Sprite = cc.Node.extend({
                         this._m_obRect.size.height = this._m_pobTexture.height;
                         context.drawImage(this._m_pobTexture, pos.x, -(pos.y + this._m_pobTexture.height));
                     } else {
-                        context.drawImage(this._m_pobTexture,
-                            this._m_obRect.origin.x, this._m_obRect.origin.y,
-                            this._m_obRect.size.width, this._m_obRect.size.height,
-                            pos.x, -(pos.y + this._m_obRect.size.height),
-                            this._m_obRect.size.width, this._m_obRect.size.height);
+                        if(this._m_bRectRotated){
+                            var i = 0;
+                        }
+                        try{
+                            context.drawImage(this._m_pobTexture,
+                                this._m_obRect.origin.x, this._m_obRect.origin.y,
+                                this._m_obRect.size.width, this._m_obRect.size.height,
+                                pos.x, -(pos.y + this._m_obRect.size.height),
+                                this._m_obRect.size.width, this._m_obRect.size.height);
+                        }catch(e){
+
+                        }
+
                     }
                 } else {
                     if ((this._m_tContentSize.width == 0) && (this._m_tContentSize.height == 0)) {
@@ -1128,7 +1148,7 @@ cc.Sprite = cc.Node.extend({
             //this._addDirtyRegionToDirector(this.boundingBoxToWorld());
 
             this._m_bFlipX = bFlipX;
-            this.setTextureRectInPixels(this._m_obRectInPixels, this._m_bRectRotated, this._m_tContentSizeInPixels);
+            //this.setTextureRectInPixels(this._m_obRectInPixels, this._m_bRectRotated, this._m_tContentSizeInPixels);
 
             //save dirty region when after changed
             //this._addDirtyRegionToDirector(this.boundingBoxToWorld());
@@ -1269,6 +1289,8 @@ cc.Sprite = cc.Node.extend({
         }
         // update rect
         this._m_bRectRotated = pNewFrame.isRotated();
+        if(this._m_bRectRotated)
+            this.setRotation(-90);
         this.setTextureRectInPixels(pNewFrame.getRectInPixels(), pNewFrame.isRotated(), pNewFrame.getOriginalSizeInPixels());
         //save dirty region when after changed
         //this._addDirtyRegionToDirector(this.boundingBoxToWorld());

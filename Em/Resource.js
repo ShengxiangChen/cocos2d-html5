@@ -14,6 +14,7 @@ var s_explosion = "Resources/explosion.png";
 var s_explode1 = "Resources/explode1.jpg";
 var s_explode2= "Resources/explode2.jpg";
 var s_explode3 = "Resources/explode3.jpg";
+var s_hit = "Resources/hit.jpg";
 
 //music
 var s_bgMusic = "Resources/Music/bgMusic";
@@ -49,6 +50,7 @@ var g_ressources = [
     {type:"image", src:s_explode1},
     {type:"image", src:s_explode2},
     {type:"image", src:s_explode3},
+    {type:"image", src:s_hit},
 
     //tmx
     {type:"tmx", src:s_level01},

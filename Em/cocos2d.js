@@ -165,10 +165,15 @@ cc.loadjs('../Em/Resource.js');
 cc.loadjs('../Em/Classes/Config/Global.js');
 cc.loadjs('../Em/Classes/Config/Level.js');
 cc.loadjs('../Em/Classes/Config/EnemyType.js');
-cc.loadjs('../Em/Classes/GameControlMenu.js');
+cc.loadjs('../Em/Classes/Enemy.js');
+cc.loadjs('../Em/Classes/Explosion.js');
+cc.loadjs('../Em/Classes/Ship.js');
+cc.loadjs('../Em/Classes/Bullet.js');
+cc.loadjs('../Em/Classes/SysMenu.js');
 cc.loadjs('../Em/Classes/LevelManager.js');
+cc.loadjs('../Em/Classes/GameControlMenu.js');
 cc.loadjs('../Em/Classes/GameLayer.js');
 cc.loadjs('../Em/Classes/SettingsLayer.js');
 cc.loadjs('../Em/Classes/AboutLayer.js');
-cc.loadjs('../Em/Classes/SysMenu.js');
 cc.loadjs('../Em/Classes/GameOver.js');
+

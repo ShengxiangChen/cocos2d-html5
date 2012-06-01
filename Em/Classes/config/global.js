@@ -1,14 +1,19 @@
+var winSize = null;
+var keys = [];
 var global = {
     level:1,
     life:4,
     score:0,
-    sound:true,
+    sound:false,
+    DELTA_X:-100,
+    OFFSET_X:-24,
+    ROT:-5.625,
     bulletType:{
         Ship:1,
         Enemy:2
     },
     weaponType:{
-         one:1
+        one:1
     },
     Tag:{
         EnemyBullet:900,
@@ -25,5 +30,6 @@ var global = {
     AttackMode:{
         Normal:1,
         Tsuihikidan:2
-    }
+    },
+    lifeUpScores:[50000, 100000, 150000, 200000, 250000, 300000]
 };

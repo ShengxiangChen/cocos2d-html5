@@ -2,14 +2,13 @@ var SettingsLayer = cc.Layer.extend({
     init:function () {
         var bRet = false;
         if (this._super()) {
-            this._s = cc.Director.sharedDirector().getWinSize();
             var sp = cc.Sprite.spriteWithFile(s_loading);
             sp.setAnchorPoint(cc.PointZero());
             this.addChild(sp, 0, 1);
 
             var cacheImage = cc.TextureCache.sharedTextureCache().addImage(s_menuTitle)
             var title = cc.Sprite.spriteWithTexture(cacheImage, cc.RectMake(0, 0, 134, 34));
-            title.setPosition(cc.ccp(this._s.width / 2, this._s.height - 120));
+            title.setPosition(cc.ccp(winSize.width / 2, winSize.height - 120));
             this.addChild(title);
 
             cc.MenuItemFont.setFontName("Arial");
@@ -61,6 +60,9 @@ var SettingsLayer = cc.Layer.extend({
     },
     soundControl:function(){
         global.sound = global.sound ? false : true;
+        if(!global.sound){
+            cc.AudioManager.sharedEngine().end();
+        }
     },
     modeControl:function(){
     }

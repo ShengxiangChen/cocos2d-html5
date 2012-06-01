@@ -1,11 +1,9 @@
 var GameOver = cc.Layer.extend({
     _ship:null,
     _lbScore:0,
-    _s:null,
     init:function () {
         var bRet = false;
         if (this._super) {
-            this._s = cc.Director.sharedDirector().getWinSize();
             var sp = cc.Sprite.spriteWithFile(s_loading);
             sp.setAnchorPoint(cc.PointZero());
             this.addChild(sp, 0, 1);
@@ -28,7 +26,7 @@ var GameOver = cc.Layer.extend({
 
             var menu = cc.Menu.menuWithItems(playAgain);
             this.addChild(menu, 1, 2);
-            menu.setPosition(cc.ccp(this._s.width / 2, 220));
+            menu.setPosition(cc.ccp(winSize.width / 2, 220));
 
             var lbScore = cc.LabelTTF.labelWithString("Your Score:"+global.score,"Arial Bold",16);
             lbScore.setPosition(cc.ccp(160,280));
@@ -49,6 +47,10 @@ var GameOver = cc.Layer.extend({
             this.addChild(cocos2dMenu);
 
             this.schedule(this.update,0.1);
+
+                if(global.sound){
+                    cc.AudioManager.sharedEngine().playBackgroundMusic(s_mainMainMusic)
+                }
 
             bRet = true;
         }

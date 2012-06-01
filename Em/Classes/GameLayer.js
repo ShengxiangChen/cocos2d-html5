@@ -1,266 +1,3 @@
-var keys = [];
-var winSize = null;
-
-var Ship = cc.Sprite.extend({
-    speed:220,
-    bulletSpeed:700,
-    HP:10,
-    bulletTypeValue:1,
-    bulletPowerValue:1,
-    shotting:false,
-    throwBombing:false,
-    canBeAttack:false,
-    canBeControl:false,
-    isThrowingBomb:false,
-    zOrder:3000,
-    maxBulletPowerValue:4,
-    canShot:true,
-    lifeUpScores:[50000, 100000, 150000, 200000, 250000, 300000],
-    appearPosition:cc.ccp(160, 60),
-    _hurtColorLife:0,
-    active:true,
-    ctor:function () {
-        //init life
-        this.life = global.level + 4;
-        var shipTexture = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
-        this.initWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
-        this.setTag(this.zOrder);
-        this.setPosition(this.appearPosition);
-        // set frame
-        var animation = cc.Animation.animation();
-        animation.addFrameWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
-        animation.addFrameWithTexture(shipTexture, cc.RectMake(60, 0, 60, 38));
-
-        // ship animate
-        var action = cc.Animate.actionWithDuration(0.4, animation, true);
-
-        var onBorn = cc.CallFunc.actionWithTarget(this,function(pSender){
-            pSender.runAction(cc.RepeatForever.actionWithAction(action));
-        });
-        this.runAction(onBorn);
-        this.schedule(this.shoot, 1 / 6);
-
-
-        //revive effect
-        this.HP=999999999;
-        var ghostSprite = new additiveSprite();
-        ghostSprite.initWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
-        ghostSprite.setScale(8);
-        ghostSprite.setPosition({x:this.getContentSize().x/2, y:this.getContentSize().y/2});
-        this.addChild(ghostSprite, 3000, 99999999);
-        ghostSprite.runAction(cc.ScaleTo.actionWithDuration(0.5,1,1));
-        var blinks = cc.Blink.actionWithDuration(3, 9);
-        var makeHP10 = cc.CallFunc.actionWithTarget(this,function(t){t.HP = 10; t.setIsVisible(true)});
-        this.runAction(cc.Sequence.actions(cc.DelayTime.actionWithDuration(0.5), blinks, makeHP10));
-
-        if (global.sound) {
-            cc.AudioManager.sharedEngine().playBackgroundMusic(s_bgMusic, true);
-        }
-    },
-    update:function (dt) {
-        var newX = this.getPosition().x, newY = this.getPosition().y;
-        if (keys[cc.key.w]  && this.getPosition().y <= winSize.height) {
-            newY += dt * this.speed;
-        }
-        if (keys[cc.key.s] && this.getPosition().y >= 0) {
-            newY -= dt * this.speed;
-        }
-        if (keys[cc.key.a] && this.getPosition().x >= 0) {
-            newX -= dt * this.speed;
-        }
-        if (keys[cc.key.d] && this.getPosition().x <= winSize.width) {
-            newX += dt * this.speed;
-        }
-        this.setPosition(cc.ccp(newX, newY));
-
-        if (this.HP <= 0) {
-            this.active = false;
-        }
-        this._timeTick += dt;
-        if (this._timeTick > 0.1) {
-            this._timeTick = 0;
-            if (this._hurtColorLife > 0) {
-                this._hurtColorLife--;
-            }
-            if (this._hurtColorLife == 1) {
-                this.setColor(new cc.Color3B(255, 255, 255));
-            }
-        }
-    },
-    shoot:function (dt) {
-        if (this.canShot) {
-/*            var b = new Bullet(this.bulletSpeed, "W1.png", global.AttackMode.Normal);
-            this.getParent().addChild(b, b.zOrder, global.Tag.ShipBullet);
-            b.setPosition(cc.ccp(this.getPosition().x, this.getPosition().y + this.getContentSize().height * 0.3));*/
-            playerShoot(this.getParent(),this);
-        }
-    },
-    destroy:function () {
-        global.life--;
-        this.getParent().addChild(new Explosion(this.getPosition().x, this.getPosition().y));
-        this.getParent().removeChild(this);
-    },
-    throwBomb:function () {
-    },
-    hurt:function () {
-        this._hurtColorLife = 2;
-        this.HP--;
-        this.setColor(cc.RED());
-        this.runAction(cc.Sequence.actions(
-            cc.MoveBy.actionWithDuration(0.05,cc.ccp(2.5,5)),
-            cc.MoveBy.actionWithDuration(0.05,cc.ccp(-5,-5)),
-            cc.MoveBy.actionWithDuration(0.05,cc.ccp(5,-2.5))
-        ));
-    }
-});
-
-//bullet
-var Bullet = cc.Sprite.extend({
-    active:true,
-    xVolocity:0,
-    yVolocity:200,
-    power:1,
-    HP:1,
-    moveType:null,
-    zOrder:3000,
-    attackMode:global.AttackMode.Normal,
-    parentType:global.bulletType.Ship,
-    ctor:function (bulletSpeed, weaponType, attackMode) {
-        this.yVolocity = -bulletSpeed;
-        this.attackMode = attackMode;
-        cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_bullet_plist);
-        this.initWithSpriteFrameName(weaponType);
-
-        /*var tmpAction;
-        switch (this.attackMode) {
-            case global.AttackMode.Normal:
-                tmpAction = cc.MoveBy.actionWithDuration(2, cc.ccp(this.getPosition().x, 400));
-                break;
-            case global.AttackMode.Tsuihikidan:
-                tmpAction = cc.MoveTo.actionWithDuration(2, GameLayer.node()._ship.getPosition());
-                break;
-        }
-        this.runAction(tmpAction);*/
-
-    },
-    inBounds:function () {
-        var b = this.getPosition();
-        return b.x >= 0 && b.x <= winSize.width && b.y >= 0 && b.y <= winSize.height;
-    },
-    update:function (dt) {
-        var newX = this.getPositionX(), newY = this.getPositionY();
-         newX -= this.xVolocity * dt;
-         newY -= this.yVolocity * dt;
-         this.setPosition(cc.ccp(newX, newY));
-        this.active = this.active && this.inBounds();
-        if (this.HP <= 0) {
-            this.active = false;
-        }
-    },
-    destroy:function () {
-        this.getParent().removeChild(this);
-    },
-    draw:function (ctx) {
-        var context = ctx || cc.renderContext;
-        context.globalCompositeOperation = 'lighter';
-        this._super(ctx);
-    },
-    hurt:function () {
-        this.HP--;
-    }
-})
-
-var Explosion = cc.Sprite.extend({
-    ctor:function (x, y) {
-        cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_explosion_plist);
-        var pFrame = cc.SpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName("explosion_01.png");
-        this.initWithSpriteFrame(pFrame);
-
-        var animFrames = [];
-        var str = "";
-        for (var i = 1; i < 35; i++) {
-            str = "explosion_" + (i < 10 ? ("0" + i) : i) + ".png";
-            var frame = cc.SpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(str);
-            animFrames.push(frame);
-        }
-        var animation = cc.Animation.animationWithFrames(animFrames, 0.04);
-
-        this.setPosition(cc.ccp(x, y));
-        this.runAction(cc.Sequence.actions(
-            cc.Animate.actionWithAnimation(animation, false),
-            cc.CallFunc.actionWithTarget(this, this.destroy)
-        ));
-    },
-    update:function () {
-
-    },
-    draw:function (ctx) {
-        var context = ctx || cc.renderContext;
-        context.globalCompositeOperation = 'lighter';
-        this._super(ctx);
-    },
-    destroy:function () {
-        this.getParent().removeChild(this);
-    }
-});
-
-var Enemy = cc.Sprite.extend({
-    active:true,
-    speed:200,
-    bulletSpeed:-200,
-    HP:15,
-    bulletPowerValue:1,
-    moveType:null,
-    scoreValue:200,
-    canBeAttack:true,
-    zOrder:1000,
-    delayTime:1.5 + 1.5 * Math.random(),
-    attackMode:global.AttackMode.Normal,
-    ctor:function (arg) {
-        this.HP = arg.HP;
-        this.moveType = arg.moveType;
-        this.scoreValue = arg.scoreValue;
-        this.attackMode = arg.attackMode;
-        cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
-
-        this.initWithSpriteFrameName(arg.textureName);
-        this.schedule(this.shoot, this.delayTime)
-    },
-    _timeTick:0,
-    update:function (dt) {
-        if (this.HP <= 0) {
-            this.active = false;
-        }
-        this._timeTick += dt;
-        if (this._timeTick > 0.1) {
-            this._timeTick = 0;
-            if (this._hurtColorLife > 0) {
-                this._hurtColorLife--;
-            }
-            if (this._hurtColorLife == 1) {
-                this.setColor(new cc.Color3B(255, 255, 255));
-            }
-        }
-    },
-    destroy:function () {
-        global.score += this.scoreValue;
-        this.getParent().addChild(new Explosion(this.getPosition().x, this.getPosition().y));
-        explode(this.getPosition(),this.getParent(), 1.2, 0.7);
-        this.getParent().removeChild(this);
-    },
-    shoot:function () {
-        var b = new Bullet(this.bulletSpeed, "W2.png", this.attackMode);
-        this.getParent().addChild(b, b.zOrder, global.Tag.EnemyBullet);
-        b.setPosition(cc.ccp(this.getPosition().x, this.getPosition().y - this.getContentSize().height * 0.2));
-    },
-    _hurtColorLife:0,
-    hurt:function () {
-        this._hurtColorLife = 2;
-        this.HP--;
-        this.setColor(cc.RED());
-    }
-});
-
 var GameLayer = cc.Layer.extend({
     _time:null,
     _ship:null,
@@ -280,7 +17,7 @@ var GameLayer = cc.Layer.extend({
             winSize = cc.Director.sharedDirector().getWinSize();
             this._levelManager = new LevelManager(this);
             this.initBackground();
-            this.screenRect = new cc.Rect(0, 0, winSize.width, winSize.height);
+            this.screenRect = new cc.Rect(-20, -20, winSize.width + 40, winSize.height + 40);
 
             // score
             this.lbScore = cc.LabelTTF.labelWithString("Score: 0", cc.SizeMake(winSize.width / 2, 50), cc.TextAlignmentRight, "Arial", 14);
@@ -399,20 +136,7 @@ var GameLayer = cc.Layer.extend({
             this._isBackTileReload = false;
         }
     },
-    checkEnemyIsInBound:function () {
-        var layerChildren = this.getChildren();
-        for (var i = 0; i < layerChildren.length; i++) {
-            var selChild = layerChildren[i];
-            if (selChild.getTag() == global.Tag.Enemy) {
-                var childRect = selChild.boundingBoxToWorld();
-                if (!cc.Rect.CCRectIntersectsRect(this.screenRect, childRect)) {
-                    this.removeChild(selChild, true);
-                }
-            }
-        }
-    },
     shakingScreen:function(){
-
     },
     ccTouchesEnded:function (pTouches, pEvent) {
         if (pTouches.length <= 0)
@@ -499,11 +223,24 @@ var GameLayer = cc.Layer.extend({
             }
         }
     },
+    checkEnemyAndBulletIsInBound:function () {
+        var layerChildren = this.getChildren();
+        for (var i = 0; i < layerChildren.length; i++) {
+            var selChild = layerChildren[i];
+            if ((selChild.getTag() == global.Tag.Enemy) || (selChild.getTag() == global.Tag.EnemyBullet)  || (selChild.getTag() == global.Tag.ShipBullet)) {
+                var childRect = selChild.boundingBoxToWorld();
+                if (!cc.Rect.CCRectIntersectsRect(this.screenRect, childRect)) {
+                    this.removeChild(selChild, true);
+                }
+            }
+        }
+    },
     collide:function (a, b) {
-        return a.getPosition().x - a.getContentSize().width * a.getAnchorPoint().x < b.getPosition().x - b.getContentSize().width * b.getAnchorPoint().x + b.getContentSize().width &&
-            a.getPosition().x - a.getContentSize().width * a.getAnchorPoint().x + a.getContentSize().width > b.getPosition().x - b.getContentSize().width * b.getAnchorPoint().x &&
-            a.getPosition().y - a.getContentSize().height * a.getAnchorPoint().y < b.getPosition().y + b.getContentSize().height &&
-            a.getPosition().y - a.getContentSize().height * a.getAnchorPoint().y + a.getContentSize().height > b.getPosition().y - b.getContentSize().height * b.getAnchorPoint().y;
+        var aRect = a.collideRect();
+        var bRect = b.collideRect();
+        if (cc.Rect.CCRectIntersectsRect(aRect, bRect)) {
+            return true;
+        }
     },
     onGameOver:function () {
         var scene = cc.Scene.node();
