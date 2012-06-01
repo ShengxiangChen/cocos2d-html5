@@ -6,7 +6,7 @@
 
     <target name="compile_Canvas">
         <jscomp compilationLevel="simple" warning="quiet"
-                debug="false" output="cocos2d-html5-alpha-canvasmenu-min.js">
+                debug="false" output="../lib/cocos2d-html5-alpha-canvasmenu-min.js">
             <sources dir="${basedir}">
                 <file name="platform/CCClass.js"/>
                 <file name="platform/CCCommon.js"/>
@@ -14,8 +14,8 @@
                 <file name="platform/JXGUtil.js"/>
                 <file name="platform/base64.js"/>
                 <file name="platform/gzip.js"/>
-                <file name="platform/ccMacro.js"/>
-                <file name="platform/ccConfig.js"/>
+                <file name="platform/CCMacro.js"/>
+                <file name="platform/CCConfig.js"/>
                 <file name="platform/CCFileUtils.js"/>
                 <file name="platform/CCTypes.js"/>
                 <file name="cocoa/CCGeometry.js"/>
@@ -90,7 +90,7 @@
 
     <target name="compile_Dom">
         <jscomp compilationLevel="simple" warning="quiet"
-                debug="false" output="cocos2d-html5-alpha-dommenu-min.js">
+                debug="false" output="../lib/cocos2d-html5-alpha-dommenu-min.js">
             <sources dir="${basedir}">
                 <file name="platform/CCClass.js"/>
                 <file name="platform/CCCommon.js"/>
@@ -98,8 +98,8 @@
                 <file name="platform/JXGUtil.js"/>
                 <file name="platform/base64.js"/>
                 <file name="platform/gzip.js"/>
-                <file name="platform/ccMacro.js"/>
-                <file name="platform/ccConfig.js"/>
+                <file name="platform/CCMacro.js"/>
+                <file name="platform/CCConfig.js"/>
                 <file name="platform/CCFileUtils.js"/>
                 <file name="platform/CCTypes.js"/>
                 <file name="cocoa/CCGeometry.js"/>
