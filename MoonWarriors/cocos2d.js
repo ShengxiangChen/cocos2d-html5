@@ -85,5 +85,21 @@ cc.loadjs = function (filename) {
 };
 
 cc.loadjs('cocos2d-html5-alpha-canvasmenu-min.js');
-cc.loadjs('MoonWarriors-min.js');
+cc.loadjs('Classes/AppDelegate.js');
+cc.loadjs('Resource.js');
+cc.loadjs('Classes/Config/Global.js');
+cc.loadjs('Classes/Config/Level.js');
+cc.loadjs('Classes/Config/EnemyType.js');
+cc.loadjs('Classes/Effect.js');
+cc.loadjs('Classes/Enemy.js');
+cc.loadjs('Classes/Explosion.js');
+cc.loadjs('Classes/Ship.js');
+cc.loadjs('Classes/Bullet.js');
+cc.loadjs('Classes/SysMenu.js');
+cc.loadjs('Classes/LevelManager.js');
+cc.loadjs('Classes/GameControlMenu.js');
+cc.loadjs('Classes/GameLayer.js');
+cc.loadjs('Classes/SettingsLayer.js');
+cc.loadjs('Classes/AboutLayer.js');
+cc.loadjs('Classes/GameOver.js');
 
