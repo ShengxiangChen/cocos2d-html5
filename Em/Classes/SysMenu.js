@@ -1,41 +1,3 @@
-var additiveSprite = cc.Sprite.extend({
-    draw:function (ctx) {
-        var context = ctx || cc.renderContext;
-        context.globalCompositeOperation = 'lighter';
-        this._super(ctx);
-    }
-});
-
-var flareEffect = function (parent, target, callback) {
-    var flare = new additiveSprite();
-    flare.initWithFile(s_flare);
-    parent.addChild(flare, 10);
-    flare.setOpacity(0);
-    flare.setPosition(cc.ccp(-30, 297));
-    flare.setRotation(-120);
-    flare.setScale(0.2);
-
-    var opacityAnim = cc.FadeTo.actionWithDuration(0.5, 255);
-    var opacDim = cc.FadeTo.actionWithDuration(1, 0);
-    var biggeAnim = cc.ScaleBy.actionWithDuration(0.7, 1.2, 1.2);
-    var biggerEase = cc.EaseSineOut.actionWithAction(biggeAnim);
-    var moveAnim = cc.MoveBy.actionWithDuration(0.5, cc.ccp(328, 0));
-    var easeMove = cc.EaseSineOut.actionWithAction(moveAnim);
-    var rotateAnim = cc.RotateBy.actionWithDuration(2.5, 90);
-    var rotateEase = cc.EaseExponentialOut.actionWithAction(rotateAnim)
-    var bigger = cc.ScaleTo.actionWithDuration(0.5, 1);
-
-    var onComplete = cc.CallFunc.actionWithTarget(target, callback);
-    var killflare = cc.CallFunc.actionWithTarget(flare, function () {
-        this.getParent().removeChild(this);
-    });
-    flare.runAction(cc.Sequence.actions(opacityAnim, biggerEase, opacDim, killflare, onComplete));
-    flare.runAction(easeMove);
-    flare.runAction(rotateEase);
-    flare.runAction(bigger);
-};
-
-
 var SysMenu = cc.Layer.extend({
     _ship:null,
     init:function () {
@@ -77,7 +39,7 @@ var SysMenu = cc.Layer.extend({
             this.schedule(this.update, 0.1);
 
            var tmp = cc.TextureCache.sharedTextureCache().addImage(s_ship01);
-            this._ship = cc.Sprite.spriteWithTexture(tmp,cc.RectMake(0, 0, 60, 38));
+            this._ship = cc.Sprite.spriteWithTexture(tmp,cc.RectMake(0, 45, 60, 38));
             this.addChild(this._ship, 0, 4);
             this._ship.setPosition(cc.ccp(Math.random() * winSize.width, 0));
             this._ship.runAction(cc.MoveBy.actionWithDuration(2, cc.ccp(Math.random() * winSize.width, this._ship.getPosition().y + winSize.height + 100)));
@@ -103,16 +65,10 @@ var SysMenu = cc.Layer.extend({
         cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2, scene));
     },
     onAbout:function (pSender) {
-        var a = new Explosion(cc.ccp(100 , 100));
-        var one = new additiveSprite();
-        one.initWithFile(s_explode1);
-        a.addChild(one);
-        a.setPosition(cc.ccp(100,100))
-        this.addChild(a,9999999)
-        /*this.onButtonEffect();
+        this.onButtonEffect();
         var scene = cc.Scene.node();
         scene.addChild(AboutLayer.node());
-        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2, scene));*/
+        cc.Director.sharedDirector().replaceScene(cc.TransitionFade.transitionWithDuration(1.2, scene));
     },
     update:function () {
         if (this._ship.getPosition().y > 480) {

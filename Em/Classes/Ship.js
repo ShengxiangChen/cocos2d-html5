@@ -32,9 +32,9 @@ var Ship = cc.Sprite.extend({
         //revive effect
         this.canBeAttack = false;
         var ghostSprite = new additiveSprite();
-        ghostSprite.initWithTexture(shipTexture, cc.RectMake(0, 0, 60, 38));
+        ghostSprite.initWithTexture(shipTexture, cc.RectMake(0, 45, 60, 38));
         ghostSprite.setScale(8);
-        ghostSprite.setPosition(cc.ccp(this.getContentSize().x / 2, this.getContentSize().y / 2));
+        ghostSprite.setPosition(cc.ccp(this.getContentSize().width / 2, 12));
         this.addChild(ghostSprite, 3000, 99999);
         ghostSprite.runAction(cc.ScaleTo.actionWithDuration(0.5, 1, 1));
         var blinks = cc.Blink.actionWithDuration(3, 9);
@@ -51,16 +51,16 @@ var Ship = cc.Sprite.extend({
     },
     update:function (dt) {
         var newX = this.getPosition().x, newY = this.getPosition().y;
-        if ((keys[cc.key.w] || keys[cc.key.up]) && this.getPosition().y <= winSize.height) {
+        if ((keys[cc.KEY.w] || keys[cc.KEY.up]) && this.getPosition().y <= winSize.height) {
             newY += dt * this.speed;
         }
-        if ((keys[cc.key.s] || keys[cc.key.down]) && this.getPosition().y >= 0) {
+        if ((keys[cc.KEY.s] || keys[cc.KEY.down]) && this.getPosition().y >= 0) {
             newY -= dt * this.speed;
         }
-        if ((keys[cc.key.a] || keys[cc.key.left]) && this.getPosition().x >= 0) {
+        if ((keys[cc.KEY.a] || keys[cc.KEY.left]) && this.getPosition().x >= 0) {
             newX -= dt * this.speed;
         }
-        if ((keys[cc.key.d] || keys[cc.key.right]) && this.getPosition().x <= winSize.width) {
+        if ((keys[cc.KEY.d] || keys[cc.KEY.right]) && this.getPosition().x <= winSize.width) {
             newX += dt * this.speed;
         }
         this.setPosition(cc.ccp(newX, newY));

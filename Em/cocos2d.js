@@ -165,6 +165,7 @@ cc.loadjs('../Em/Resource.js');
 cc.loadjs('../Em/Classes/Config/Global.js');
 cc.loadjs('../Em/Classes/Config/Level.js');
 cc.loadjs('../Em/Classes/Config/EnemyType.js');
+cc.loadjs('../Em/Classes/Effect.js');
 cc.loadjs('../Em/Classes/Enemy.js');
 cc.loadjs('../Em/Classes/Explosion.js');
 cc.loadjs('../Em/Classes/Ship.js');

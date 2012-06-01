@@ -1,5 +1,5 @@
 //bullet
-var Bullet = cc.Sprite.extend({
+var Bullet = additiveSprite.extend({
     active:true,
     xVolocity:0,
     yVolocity:200,
@@ -47,17 +47,12 @@ var Bullet = cc.Sprite.extend({
         explode.runAction(cc.ScaleBy.actionWithDuration(0.3, 2,2));
         explode.runAction(cc.Sequence.actions(cc.FadeOut.actionWithDuration(0.3), removeExplode))
     },
-    draw:function (ctx) {
-        var context = ctx || cc.renderContext;
-        context.globalCompositeOperation = 'lighter';
-        this._super(ctx);
-    },
     hurt:function () {
         this.HP--;
     },
     collideRect:function(){
         var a = this.getContentSize();
-        var r = new cc.RectMake(this.getPositionX() - a.width/4,this.getPositionY() - a.height/4,a.width/2,a.height/2);
+        var r = new cc.RectMake(this.getPositionX() - 3,this.getPositionY() - 3,6,6);
         return r;
     }
 });

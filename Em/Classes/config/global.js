@@ -4,7 +4,7 @@ var global = {
     level:1,
     life:4,
     score:0,
-    sound:false,
+    sound:true,
     DELTA_X:-100,
     OFFSET_X:-24,
     ROT:-5.625,

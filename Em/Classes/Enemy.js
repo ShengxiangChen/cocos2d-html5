@@ -6,7 +6,6 @@ var Enemy = cc.Sprite.extend({
     bulletPowerValue:1,
     moveType:null,
     scoreValue:200,
-    canBeAttack:true,
     zOrder:1000,
     delayTime:1.5 + 1.5 * Math.random(),
     attackMode:global.AttackMode.Normal,
@@ -16,7 +15,6 @@ var Enemy = cc.Sprite.extend({
         this.moveType = arg.moveType;
         this.scoreValue = arg.scoreValue;
         this.attackMode = arg.attackMode;
-        cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
 
         this.initWithSpriteFrameName(arg.textureName);
         this.schedule(this.shoot, this.delayTime)
@@ -39,7 +37,10 @@ var Enemy = cc.Sprite.extend({
     },
     destroy:function () {
         global.score += this.scoreValue;
-        this.getParent().addChild(new Explosion(this.getPosition()));
+        var a = new Explosion();
+        a.setPosition(this.getPosition());
+        this.getParent().addChild(a);
+        spark(this.getPosition(),this.getParent(), 1.2, 0.7);
         this.getParent().removeChild(this);
         if(global.sound){
             cc.AudioManager.sharedEngine().playEffect(s_explodeEffect);
@@ -61,3 +62,7 @@ var Enemy = cc.Sprite.extend({
         return r;
     }
 });
+
+Enemy.sharedEnemy = function(){
+    cc.SpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(s_Enemy_plist, s_Enemy);
+};
