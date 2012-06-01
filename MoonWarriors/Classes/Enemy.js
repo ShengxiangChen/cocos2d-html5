@@ -7,7 +7,7 @@ var Enemy = cc.Sprite.extend({
     moveType:null,
     scoreValue:200,
     zOrder:1000,
-    delayTime:1.5 + 1.5 * Math.random(),
+    delayTime:1 + 1.2 * Math.random(),
     attackMode:global.AttackMode.Normal,
     _hurtColorLife:0,
     ctor:function (arg) {
